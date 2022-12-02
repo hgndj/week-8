@@ -1,0 +1,132 @@
+#include&lt;stdio.h&gt;
+#include&lt;conio.h&gt;
+#include&lt;stdlib.h&gt;
+#include&lt;string.h&gt;
+
+int i=0,top=0;
+char stack[20],ip[20];
+void push(char c)
+{
+if(top&gt;=20)
+{
+printf(&quot;Stack Overflow&quot;);
+}
+else
+{
+stack[top++]=c;
+}
+}
+void pop(void)
+{
+if(top&lt;0)
+{
+printf(&quot;stack underflow&quot;);
+}
+else
+{
+top--;
+}
+}
+void error(void)
+{
+
+printf(&quot;\n syntax error&quot;);
+getch();
+exit(0);
+
+}
+int main()
+{
+int n;
+printf(&quot;The given grammar is\n\n&quot;);
+printf(&quot;E-&gt;TE&#39;\n&quot;);
+printf(&quot;E&#39;-&gt;+TE&#39;|epsilon\n&quot;);
+printf(&quot;T-&gt;FT&#39;\n&quot;);
+printf(&quot;T&#39;-&gt;*FT&#39;|epsilon\n&quot;);
+printf(&quot;F-&gt;(E)|d\n\n&quot;);
+printf(&quot;Enter the string to be parsed:\n&quot;);
+scanf(&quot;%s&quot;,ip);
+n=strlen(ip);
+ip[n]=&#39;$&#39;;
+ip[n+1]=&#39;\0&#39;;
+push(&#39;$&#39;);
+push(&#39;E&#39;);
+while(ip[i]!=&#39;\0&#39;)
+{
+if(ip[i]==&#39;$&#39;&amp;&amp;stack[top-1]==&#39;$&#39;)
+{
+printf(&quot;\n\n successful parsing of string\n&quot;);
+return 1;
+}
+else if(ip[i]==stack[top-1])
+{
+printf(&quot;\nMatch of %c&quot;,ip[i]);
+i++;
+pop();
+}
+
+else
+{
+if(stack[top-1]==&#39;E&#39;&amp;&amp;(ip[i]==&#39;d&#39;||ip[i]==&#39;(&#39;))
+{
+printf(&quot;\n E-&gt;TE&#39;&quot;);
+pop();
+push(&#39;A&#39;);
+push(&#39;T&#39;);
+}
+else if(stack[top-1]==&#39;A&#39;&amp;&amp;ip[i]==&#39;+&#39;)
+{
+printf(&quot;\nE&#39;-&gt;+TE&#39;&quot;);
+pop();
+push(&#39;A&#39;);
+push(&#39;T&#39;);
+push(&#39;+&#39;);
+}
+else if(stack[top-1]==&#39;A&#39;&amp;&amp;(ip[i]==&#39;)&#39;||ip[i]==&#39;$&#39;))
+{
+printf(&quot;E&#39;-&gt;epsilon&quot;);
+pop();
+}
+else if(stack[top-1]==&#39;T&#39;&amp;&amp;(ip[i]==&#39;d&#39;||ip[i]==&#39;(&#39;))
+{
+printf(&quot;\n T-&gt;FT&#39;&quot;);
+pop();
+push(&#39;B&#39;);
+push(&#39;F&#39;);
+}
+else if(stack[top-1]==&#39;B&#39;&amp;&amp;ip[i]==&#39;*&#39;)
+
+{
+printf(&quot;\n T-&gt;*FT&#39;&quot;);
+pop();
+push(&#39;B&#39;);
+push(&#39;F&#39;);
+push(&#39;*&#39;);
+}
+else if(stack[top-1]==&#39;B&#39;&amp;&amp;(ip[i]==&#39;+&#39;||ip[i]==&#39;)&#39;||ip[i]==&#39;$&#39;))
+{
+printf(&quot;\nT&#39;-&gt;epsilon&quot;);
+pop();
+}
+else if(stack[top-1]==&#39;F&#39;&amp;&amp;ip[i]==&#39;d&#39;)
+{
+printf(&quot;\n F-&gt;d&quot;);
+pop();
+push(&#39;d&#39;);
+}
+else if(stack[top-1]==&#39;F&#39;&amp;&amp;ip[i]==&#39;(&#39;)
+{
+printf(&quot;\n F-&gt;(E)&quot;);
+pop();
+push(&#39;)&#39;);
+push(&#39;E&#39;);
+push(&#39;(&#39;);
+}
+else
+{
+error();
+}
+
+}
+}
+}
